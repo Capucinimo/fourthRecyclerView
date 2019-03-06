@@ -1,31 +1,74 @@
 package tinkoff.hw.fourthrecyclerview
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
 class FavouritesTabFragment : Fragment() {
-    /*companion object {
-
-        @JvmStatic
-        fun newInstance(color: Int): FavouritesTabFragment {
-            // аналогично ColorPagerFragment, записываем аргументы в Bundle и передаем фрагменту
-            val args = Bundle()
-            args.putInt(ARG_COLOR, color)
-            val fragment = FavouritesTabFragment()
-            fragment.arguments = args
-            return fragment
-        }
-
-        /**
-         * ключ, по которому будет храниться цвет фрагмента
-         */
-        private const val ARG_COLOR = "color"
-    }*/
+    private val KEY_NEWS = "news"
+    var favNews = ArrayList<NewsElement>()
+    var recyclerView:RecyclerView? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_favouritestab, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_favouritestab, container, false)
+        recyclerView = rootView.findViewById(R.id.favouritestab_recyclerview)
+        class Listener : NewsAdapter.Listener {
+            override fun onNewsElementClick(position: Int, newsElement: NewsElement) {
+                val intent = Intent(activity!!, NewsActivity::class.java)
+                intent.putExtra("newsElementData", newsElement)
+                startActivity(intent)
+            }
+        }
+        recyclerView!!.adapter = NewsAdapter(favNews,Listener())
+        recyclerView!!.layoutManager = LinearLayoutManager(activity)
+        val intentFilter = IntentFilter("tinkoff.hw.fourthrecyclerview.changingFavourites")
+        LocalBroadcastManager.getInstance(activity!!).registerReceiver(myReceiver, intentFilter)
+        return rootView
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            // если есть, то достаем оттуда список цветов
+            favNews = savedInstanceState.getParcelableArrayList(KEY_NEWS)!!
+        }
+    }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // сохраняем список цветов в outState, чтобы потом вытащить его в onCreate
+        outState.putParcelableArrayList(KEY_NEWS, favNews)
+    }
+    val myReceiver = object : BroadcastReceiver() {
+        override fun onReceive(contxt: Context?, intent: Intent?) {
+            when (intent?.action) {
+                "tinkoff.hw.fourthrecyclerview.changingFavourites" -> {
+                    val newsElement = intent.getParcelableExtra<NewsElement>("newsElementData")
+                    if (newsElement.favourite!!) {
+                        favNews.add(newsElement)
+                        recyclerView?.adapter?.notifyItemInserted(favNews.count()-1)
+                    }
+                    else for (i in 0 until favNews.size)
+                        if (newsElement.id == favNews[i].id){
+                            favNews.remove(favNews[i])
+                            recyclerView!!.adapter!!.notifyItemRemoved(i)
+                            break
+                        }
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(activity!!).unregisterReceiver(myReceiver)
+        super.onDestroy()
     }
 }

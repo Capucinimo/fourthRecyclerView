@@ -10,6 +10,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 }*/
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -18,8 +23,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
+import java.time.LocalDate
 
 
 class MainActivity : AppCompatActivity() {
@@ -37,8 +46,10 @@ class MainActivity : AppCompatActivity() {
         viewPager!!.adapter = adapter
         tabLayout!!.setupWithViewPager(viewPager)
         supportActionBar?.hide()
+
     }
 }
+
 private class TabAdapter(
     fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(fragmentManager) {
