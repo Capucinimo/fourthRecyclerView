@@ -34,7 +34,6 @@ private class TabAdapter(
     }
 
     override fun getCount(): Int {
-        // количество страниц
         return fragmentList.size
     }
 

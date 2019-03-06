@@ -7,7 +7,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import java.time.Duration
 import java.time.format.DateTimeFormatter
 
 class NewsActivity : AppCompatActivity() {
@@ -51,7 +50,7 @@ class NewsActivity : AppCompatActivity() {
         toastObject?.cancel()
         toastObject = Toast.makeText(
             this,
-            if (newsElement.favourite) "Новость удалена из избранного" else "Новость добавлена в избранное",
+            if (newsElement.favourite) getString(R.string.news_deleted_from_favourites) else getString(R.string.news_added_to_favourites),
             Toast.LENGTH_SHORT
         )
         toastObject?.show()
@@ -62,9 +61,9 @@ class NewsActivity : AppCompatActivity() {
     private fun updateAddToFavouriteMenuItem() {
         val addToFavouritesMenuItem = menu?.findItem(R.id.add_to_favourites)
         if (newsElement.favourite) {
-            addToFavouritesMenuItem?.title = "\uD83D\uDDD1"
+            addToFavouritesMenuItem?.title = getString(R.string.delete_from_favourites_button)
         } else {
-            addToFavouritesMenuItem?.title = "⭐"
+            addToFavouritesMenuItem?.title = getString(R.string.add_to_favourites_button)
         }
     }
 }

@@ -1,10 +1,6 @@
 package tinkoff.hw.fourthrecyclerview
 
-import kotlin.random.Random
 
-fun randomColor(): Int {
-    return Random.nextInt().or(0xff000000.toInt())
-}
 fun randomSizeString(minLength:Int = 1,maxLength:Int = 36, string: String = java.util.UUID.randomUUID().toString()): String {
     var maxLengthRight: Int
     var minLengthRight: Int

@@ -14,21 +14,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class FavouritesTabFragment : Fragment() {
+class FavouritesTabFragment : Fragment(), NewsAdapter.Listener {
+    override fun onNewsElementClick(position: Int, newsElement: NewsElement) {
+        val intent = Intent(activity!!, NewsActivity::class.java)
+        intent.putExtra("newsElementData", newsElement)
+        startActivity(intent)
+    }
+
     private val KEY_NEWS = "news"
     var favNews = ArrayList<NewsElement>()
     var recyclerView:RecyclerView? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_favouritestab, container, false)
         recyclerView = rootView.findViewById(R.id.favouritestab_recyclerview)
-        class Listener : NewsAdapter.Listener {
-            override fun onNewsElementClick(position: Int, newsElement: NewsElement) {
-                val intent = Intent(activity!!, NewsActivity::class.java)
-                intent.putExtra("newsElementData", newsElement)
-                startActivity(intent)
-            }
-        }
-        recyclerView!!.adapter = NewsAdapter(favNews,Listener())
+        recyclerView!!.adapter = NewsAdapter(favNews,this)
         recyclerView!!.layoutManager = LinearLayoutManager(activity)
         recyclerView?.addItemDecoration(MyItemDecoration(activity!!))
         val intentFilter = IntentFilter("tinkoff.hw.fourthrecyclerview.changingFavourites")
@@ -39,13 +38,11 @@ class FavouritesTabFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
-            // если есть, то достаем оттуда список цветов
             favNews = savedInstanceState.getParcelableArrayList(KEY_NEWS)!!
         }
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        // сохраняем список цветов в outState, чтобы потом вытащить его в onCreate
         outState.putParcelableArrayList(KEY_NEWS, favNews)
     }
     private val myReceiver = object : BroadcastReceiver() {
