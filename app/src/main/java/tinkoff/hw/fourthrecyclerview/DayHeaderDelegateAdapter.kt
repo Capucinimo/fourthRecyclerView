@@ -13,7 +13,11 @@ class DayHeaderDelegateAdapter : BaseDelegateAdapter<DayHeaderDelegateAdapter.Da
         item: DayHeader,
         viewHolder: DayViewHolder
     ) {
-        viewHolder.dayHeader.text = item.pubDate.format(DateTimeFormatter.ofPattern("d MMMM, yyyy"))
+        when (item.pubDate){
+            LocalDate.now() -> viewHolder.dayHeader.text = "Сегодня"
+            LocalDate.now().minusDays(1) -> viewHolder.dayHeader.text = "Вчера"
+            else -> viewHolder.dayHeader.text = item.pubDate.format(DateTimeFormatter.ofPattern("d MMMM, yyyy"))
+        }
     }
 
     override fun getLayoutId(): Int = R.layout.day_header
