@@ -9,11 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
-    private var mDivider: Drawable? = null
-
-    init {
-        mDivider = ContextCompat.getDrawable(context, R.drawable.divider)
-    }
+    private var mDivider: Drawable? = ContextCompat.getDrawable(context, R.drawable.divider)
 
     override fun getItemOffsets(
         outRect: Rect, view: View, parent: RecyclerView,
