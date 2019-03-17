@@ -1,5 +1,6 @@
 package tinkoff.hw.fourthrecyclerview
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -20,7 +21,7 @@ class NewsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.news_pubdate).text =
             newsElement.publicationDate.format(DateTimeFormatter.ofPattern("d MMMM, yyyy"))
     }
-
+    private val ACTION_CHANGING_FAVOURITES = "tinkoff.hw.fourthrecyclerview.changingFavourites"
     private var menu: Menu? = null
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.favourite, menu)
@@ -44,9 +45,10 @@ class NewsActivity : AppCompatActivity() {
 
     private var toastObject: Toast? = null
     private fun onMenuAddToFavouritesClicked() {
-        intent.putExtra("newsElementData", newsElement).action = "tinkoff.hw.fourthrecyclerview.changingFavourites"
+        val newIntent = Intent(this, NewsActivity::class.java)
+        newIntent.putExtra("newsElementData", newsElement).action = ACTION_CHANGING_FAVOURITES
         LocalBroadcastManager.getInstance(applicationContext)
-            .sendBroadcast((intent))
+            .sendBroadcast((newIntent))
         toastObject?.cancel()
         toastObject = Toast.makeText(
             this,

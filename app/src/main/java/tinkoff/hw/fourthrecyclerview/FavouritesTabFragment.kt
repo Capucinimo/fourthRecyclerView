@@ -39,6 +39,7 @@ class FavouritesTabFragment : Fragment(), NewsDelegateAdapter.NewsElementClickLi
             dataSet.add(favNews[i])
         }
     }
+    private val ACTION_CHANGING_FAVOURITES = "tinkoff.hw.fourthrecyclerview.changingFavourites"
     private val KEY_NEWS = "news"
     var favNews = ArrayList<NewsElement>()
     var dataSet = ArrayList<IViewModel>()
@@ -55,7 +56,7 @@ class FavouritesTabFragment : Fragment(), NewsDelegateAdapter.NewsElementClickLi
         //recyclerView?.adapter = NewsAdapter(favNews,this)
         recyclerView?.layoutManager = LinearLayoutManager(activity)
         recyclerView?.addItemDecoration(MyItemDecoration(activity!!))
-        val intentFilter = IntentFilter("tinkoff.hw.fourthrecyclerview.changingFavourites")
+        val intentFilter = IntentFilter(ACTION_CHANGING_FAVOURITES)
         LocalBroadcastManager.getInstance(activity!!).registerReceiver(myReceiver, intentFilter)
         return rootView
     }
@@ -75,7 +76,7 @@ class FavouritesTabFragment : Fragment(), NewsDelegateAdapter.NewsElementClickLi
     private val myReceiver = object : BroadcastReceiver() {
         override fun onReceive(contxt: Context?, intent: Intent?) {
             when (intent?.action) {
-                "tinkoff.hw.fourthrecyclerview.changingFavourites" -> {
+                ACTION_CHANGING_FAVOURITES -> {
                     val newsElement = intent.getParcelableExtra<NewsElement>("newsElementData")
                     if (newsElement.favourite) {
                         favNews.add(newsElement)
